@@ -11,65 +11,77 @@ import SwiftUI
 struct ContentView: View {
     
     @ObservedObject var networkManager = NetworkManager()
+    var dataManager = DataManager()
     
     var body: some View {
         NavigationView {
-            VStack {
-                MapView()
-                    .edgesIgnoringSafeArea(.top)
-                .frame(height: 100 )
+            ZStack {
+                //                MapView()
+                //                    .edgesIgnoringSafeArea(.top)
+                //                    .frame(height: 100 )
                 VStack {
-                    HStack {
-                        Text("World cases by country")
-                            .padding(.horizontal)
-                            .font(.headline)
-                        Spacer()
-                        //                    Text("Cases")
-                        //                        .padding(.horizontal)
+                    VStack {
+                        
+//                        circleChart()
+                        HStack {
+                            Spacer()
+                            globalTitleView(value: networkManager.global.totalConfirmed, label: "Total Cases")
+                            Spacer()
+                        }
+                        
+                        HStack {
+                            Spacer()
+                            globalSubview(value: networkManager.global.totalRecovered, alertColor: Color(#colorLiteral(red: 0, green: 0.4885927914, blue: 0, alpha: 1)), label: "Recovered")
+                            Spacer()
+                            globalSubview(value: networkManager.global.totalDeaths, alertColor: Color(#colorLiteral(red: 1, green: 0, blue: 0, alpha: 1)), label: "Deaths")
+                            Spacer()
+                        }
+                        Divider()
                     }
                     List(networkManager.items){ item in
                         NavigationLink(
                             destination: DetailView(
-                            country: "\(item.Country)",
-                            slug: "\(item.Slug)",
-                            newConfirmed: item.NewConfirmed,
-                            totalConfirmed: item.TotalConfirmed,
-                            newDeaths: item.NewDeaths,
-                            totalDeaths: item.TotalDeaths,
-                            newRecovered: item.NewRecovered,
-                            totalRecovered: item.TotalRecovered)) {
-                                VStack {
-                                    HStack {
-                                        Text("\(item.Country)")
-                                            .fontWeight(.medium)
-                                        Spacer()
-                                        Text("\(item.TotalConfirmed) cases")
+                                country: "\(item.country)",
+                                slug: "\(item.slug)",
+                                newConfirmed: item.newConfirmed,
+                                totalConfirmed: item.totalConfirmed,
+                                newDeaths: item.newDeaths,
+                                totalDeaths: item.totalDeaths,
+                                newRecovered: item.newRecovered,
+                                totalRecovered: item.totalRecovered)) {
+                                    VStack {
+                                        HStack {
+                                            Text("\(item.country)")
+                                                .fontWeight(.medium)
+                                            Spacer()
+                                            Text("\(item.totalConfirmed) cases")
+                                        }
+                                        HStack {
+                                            Spacer()
+                                            Text("+\(item.newConfirmed) new")
+                                                .font(.footnote)
+                                        }
+                                        HStack {
+                                            Spacer()
+                                            Text("\(item.totalDeaths) deaths")
+                                                .font(.footnote)
+                                                .foregroundColor(Color(#colorLiteral(red: 1, green: 0, blue: 0, alpha: 1)))
+                                            Text("\(item.totalRecovered) recovered")
+                                                .font(.footnote)
+                                                .foregroundColor(Color(#colorLiteral(red: 0, green: 0.4885927914, blue: 0, alpha: 1)))
+                                        }
                                     }
-                                    HStack {
-                                        Spacer()
-                                        Text("+\(item.NewConfirmed) new")
-                                            .font(.footnote)
-                                    }
-                                    HStack {
-                                        Spacer()
-                                        Text("\(item.TotalDeaths) deaths")
-                                            .font(.footnote)
-                                            .foregroundColor(Color(#colorLiteral(red: 1, green: 0, blue: 0, alpha: 1)))
-                                        Text("\(item.TotalRecovered) recovered")
-                                            .font(.footnote)
-                                            .foregroundColor(Color(#colorLiteral(red: 0, green: 0.4885927914, blue: 0, alpha: 1)))
-                                    }
-                                }
                         }
                     }
                 }
                 
             }
-        
-//            .navigationBarTitle("COVID-19 Tracker", displayMode: .inline)
+                
+            .navigationBarTitle("Worldwide", displayMode: .automatic)
             
         }
         .onAppear(){
+            self.networkManager.getGlobal()
             self.networkManager.getWorldSummary()
         }
     }
@@ -80,3 +92,55 @@ struct ContentView_Previews: PreviewProvider {
         ContentView()
     }
 }
+
+struct globalTitleView: View {
+    let value: Int
+    let label: String
+    
+    var body: some View {
+        VStack {
+            Text("\(value)")
+                .font(.system(size: 25))
+                .fontWeight(.medium)
+            Text("\(label)")
+                .font(.footnote)
+        }
+    }
+}
+
+struct globalSubview: View {
+    let value: Int
+    let alertColor: Color
+    let label: String
+    
+    var body: some View {
+        VStack {
+            Text("\(value)")
+                .font(.system(size: 20))
+                .fontWeight(.medium)
+                .foregroundColor(alertColor)
+            Text("\(label)")
+                .font(.footnote)
+                .foregroundColor(alertColor)
+        }
+    }
+}
+
+//struct circleChart: View {
+//
+//    @ObservedObject var networkManager = NetworkManager()
+//
+//    greyBar: Double = Double(networ)
+//    var redBar: Double
+//    var greenBar: Double
+//
+//    var configuration = SunburstConfiguration(nodes: [
+//        Node(name: "Total", showName: true, value: greyBar, backgroundColor: #colorLiteral(red: 0.5723067522, green: 0.5723067522, blue: 0.5723067522, alpha: 0.5)),
+//        Node(name: "Recovered", showName: true, value: greenBar, backgroundColor: #colorLiteral(red: 0, green: 0.4885927914, blue: 0, alpha: 1)),
+//        Node(name: "Deaths", showName: true, value: redBar, backgroundColor: #colorLiteral(red: 1, green: 0, blue: 0, alpha: 1)),
+//    ])
+//
+//    var body: some View {
+//        SunburstView(configuration: configuration)
+//    }
+//}

@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import SwiftUICharts
 
 struct DetailView: View {
     
@@ -21,23 +22,29 @@ struct DetailView: View {
     let newRecovered: Int
     let totalRecovered: Int
     
+    var percentageChange: Int {
+        return Int((Double(newConfirmed)/Double(totalConfirmed)) * 100)
+    }
+    
+    
     var latitude = 0.0
     var longitude = 0.0
     
     let mapView = MapView()
-        
+    
     var body: some View {
         ZStack {
             VStack {
                 VStack {
-                    MapView()
-                        .frame(width: 200, height: 200)
-                        .cornerRadius(1000)
-                        .overlay(
-                            Circle().stroke(Color.white, lineWidth: 4))
-                        .shadow(radius: 2)
-                    Text(country)
-                        .font(.largeTitle)
+                    //                    MapView()
+                    //                        .frame(width: 200, height: 200)
+                    //                        .cornerRadius(1000)
+                    //                        .overlay(
+                    //                            Circle().stroke(Color.white, lineWidth: 4))
+                    //                        .shadow(radius: 2)
+                    MultiLineChartView(data: [(networkManager.caseData, GradientColors.blue), (networkManager.recoveredData, GradientColors.green), (networkManager.deathsData, GradientColors.orngPink)], title: "", legend: country)
+//                    Text(country)
+//                        .font(.title)
                     VStack{
                         if totalConfirmed != 0 {
                             Text("\(totalConfirmed) cases")
@@ -56,10 +63,9 @@ struct DetailView: View {
                     }
                     
                 }
-                
                 List(networkManager.detailItems){item in
                     HStack{
-                        Text("\(item.province)")
+                        Text("\(item.province ?? "")")
                         Spacer()
                         Text("\(item.cases) Cases")
                     }
