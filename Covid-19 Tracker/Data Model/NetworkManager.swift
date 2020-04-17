@@ -7,8 +7,7 @@
 //
 
 import Foundation
-
-
+import SwiftUICharts
 
 class NetworkManager: ObservableObject {
     
@@ -18,6 +17,7 @@ class NetworkManager: ObservableObject {
     @Published var caseData = [0.0]
     @Published var recoveredData = [0.0]
     @Published var deathsData = [0.0]
+    @Published var regionInformationIsComplete = true
     
     let dataManager = DataManager()
     
@@ -91,6 +91,8 @@ class NetworkManager: ObservableObject {
                                         let dateSortedItems = self.dataManager.sortByDate(with: results)
                                         self.detailItems = formattedItems
                                         self.caseData = dateSortedItems
+                                        self.regionInformationIsComplete = self.dataManager.isRegionInfoComplete(with: results)
+
                                     }
                                 } catch {
                                     print("Error found in the getDetailInformation function on first attempt: \(error)")

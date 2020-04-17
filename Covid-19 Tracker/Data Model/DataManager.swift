@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import SwiftUICharts
 
 struct DataManager {
     
@@ -33,11 +34,7 @@ struct DataManager {
     }
     
     func sortByDate(with element: DetailItem) -> [Double]{
-        var newElement = element
-//        while newElement.count > 100 {
-//            newElement.removeFirst()
-//        }
-        let sortedItems = newElement.sorted(by: {$0.date < $1.date})
+        let sortedItems = element.sorted(by: {$0.date < $1.date})
         var doubles: [Double] = [0.0]
         for items in sortedItems {
             if items.cases != 0 {
@@ -45,5 +42,28 @@ struct DataManager {
             }
         }
         return doubles
+    }
+    
+    func isRegionInfoComplete(with element: DetailItem) -> Bool {
+        var isComplete: Bool = false
+        for items in element {
+            if items.province == "" {
+                isComplete = false
+            }
+            else{
+                isComplete = true
+            }
+        }
+        return isComplete
+    }
+    
+    func getPercentChanged(newConfirmed: Int, newRecovered: Int, totalConfirmed: Int) -> Int {
+        let percentage = 100 - (((Float(totalConfirmed) - Float(newConfirmed)) / Float(totalConfirmed)) * 100)        
+        if newConfirmed > newRecovered {
+            return Int(percentage)
+        } else {
+            let negativePercentage = 0 - Int(percentage)
+            return negativePercentage
+        }
     }
 }

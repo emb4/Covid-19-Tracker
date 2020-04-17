@@ -22,10 +22,10 @@ struct ContentView: View {
                 VStack {
                     VStack {
                         
-//                        circleChart()
+                        //                        circleChart()
                         HStack {
                             Spacer()
-                            globalTitleView(value: networkManager.global.totalConfirmed, label: "Total Cases")
+                            globalSubview(value: networkManager.global.totalConfirmed, alertColor: Color(#colorLiteral(red: 0, green: 0.6401130557, blue: 0.8553348184, alpha: 1)), label: "Total Cases")
                             Spacer()
                         }
                         
@@ -53,14 +53,19 @@ struct ContentView: View {
                                         HStack {
                                             Text("\(item.country)")
                                                 .fontWeight(.medium)
+                                                .padding(.bottom)
+                                                .opacity(0.90)
                                             Spacer()
-                                            Text("\(item.totalConfirmed) cases")
+                                            VStack {
+                                                HStack {
+                                                    Spacer()
+                                                    Text("\(item.totalConfirmed) cases")
+                                                        .foregroundColor(Color(#colorLiteral(red: 0, green: 0.6401130557, blue: 0.8553348184, alpha: 1)))
+                                                }
+                                                //                                                Divider()
+                                            }
                                         }
-                                        HStack {
-                                            Spacer()
-                                            Text("+\(item.newConfirmed) new")
-                                                .font(.footnote)
-                                        }
+                                        
                                         HStack {
                                             Spacer()
                                             Text("\(item.totalDeaths) deaths")
