@@ -16,28 +16,25 @@ struct ContentView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                //                MapView()
-                //                    .edgesIgnoringSafeArea(.top)
-                //                    .frame(height: 100 )
                 VStack {
+                     //MARK: - Headers and Titles
                     VStack {
-                        
-                        //                        circleChart()
                         HStack {
                             Spacer()
-                            globalSubview(value: networkManager.global.totalConfirmed, alertColor: Color(#colorLiteral(red: 0, green: 0.6401130557, blue: 0.8553348184, alpha: 1)), label: "Total Cases")
+                            StatHeader(value: networkManager.global.totalConfirmed, alertColor: Color(#colorLiteral(red: 0, green: 0.6401130557, blue: 0.8553348184, alpha: 1)), label: "Total Cases")
                             Spacer()
                         }
                         
                         HStack {
                             Spacer()
-                            globalSubview(value: networkManager.global.totalRecovered, alertColor: Color(#colorLiteral(red: 0, green: 0.4885927914, blue: 0, alpha: 1)), label: "Recovered")
+                            StatHeader(value: networkManager.global.totalRecovered, alertColor: Color(#colorLiteral(red: 0, green: 0.4885927914, blue: 0, alpha: 1)), label: "Recovered")
                             Spacer()
-                            globalSubview(value: networkManager.global.totalDeaths, alertColor: Color(#colorLiteral(red: 1, green: 0, blue: 0, alpha: 1)), label: "Deaths")
+                            StatHeader(value: networkManager.global.totalDeaths, alertColor: Color(#colorLiteral(red: 1, green: 0, blue: 0, alpha: 1)), label: "Deaths")
                             Spacer()
                         }
                         Divider()
                     }
+                     //MARK: - ListView
                     List(networkManager.items){ item in
                         NavigationLink(
                             destination: DetailView(
@@ -62,7 +59,6 @@ struct ContentView: View {
                                                     Text("\(item.totalConfirmed) cases")
                                                         .foregroundColor(Color(#colorLiteral(red: 0, green: 0.6401130557, blue: 0.8553348184, alpha: 1)))
                                                 }
-                                                //                                                Divider()
                                             }
                                         }
                                         
@@ -81,9 +77,7 @@ struct ContentView: View {
                 }
                 
             }
-                
             .navigationBarTitle("Worldwide", displayMode: .automatic)
-            
         }
         .onAppear(){
             self.networkManager.getGlobal()
@@ -97,23 +91,8 @@ struct ContentView_Previews: PreviewProvider {
         ContentView()
     }
 }
-
-struct globalTitleView: View {
-    let value: Int
-    let label: String
-    
-    var body: some View {
-        VStack {
-            Text("\(value)")
-                .font(.system(size: 25))
-                .fontWeight(.medium)
-            Text("\(label)")
-                .font(.footnote)
-        }
-    }
-}
-
-struct globalSubview: View {
+ //MARK: - Header Subview
+struct StatHeader: View {
     let value: Int
     let alertColor: Color
     let label: String
@@ -130,22 +109,3 @@ struct globalSubview: View {
         }
     }
 }
-
-//struct circleChart: View {
-//
-//    @ObservedObject var networkManager = NetworkManager()
-//
-//    greyBar: Double = Double(networ)
-//    var redBar: Double
-//    var greenBar: Double
-//
-//    var configuration = SunburstConfiguration(nodes: [
-//        Node(name: "Total", showName: true, value: greyBar, backgroundColor: #colorLiteral(red: 0.5723067522, green: 0.5723067522, blue: 0.5723067522, alpha: 0.5)),
-//        Node(name: "Recovered", showName: true, value: greenBar, backgroundColor: #colorLiteral(red: 0, green: 0.4885927914, blue: 0, alpha: 1)),
-//        Node(name: "Deaths", showName: true, value: redBar, backgroundColor: #colorLiteral(red: 1, green: 0, blue: 0, alpha: 1)),
-//    ])
-//
-//    var body: some View {
-//        SunburstView(configuration: configuration)
-//    }
-//}
